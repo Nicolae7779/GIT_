@@ -1,0 +1,51 @@
+#include <stdio.h>
+
+void printMatrix(int matrix[3][3], int rows, int cols) {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            printf("%d ", matrix[i][j]);
+        }
+        printf("\n");
+    }
+    printf("\n");
+}
+
+int sumColumn(int matrix[3][3], int rows, int col) {
+    int sum = 0;
+    for (int i = 0; i < rows; i++) {
+        sum += matrix[i][col];  // Breakpoint 1: Verificăm valoarea sum și matrix[i][col]
+    }
+    return sum;
+}
+
+void replaceIfGreaterThan(int matrix[3][3], int rows, int cols, int threshold, int newValue) {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            if (matrix[i][j] > threshold) {
+                matrix[i][j] = newValue;  // Breakpoint 2: Verificăm valoarea matrix[i][j] și condiția
+            }
+        }
+    }
+}
+
+int main() {
+    int rows = 3, cols = 3;
+    int matrix[3][3] = {
+        {1, 2, 3},
+        {4, 5, 6},
+        {7, 8, 9}
+    };
+
+    printf("Matricea inițială:\n");
+    printMatrix(matrix, rows, cols);  // Breakpoint 3: Verificăm matricea înainte de modificări
+
+    int colSum = sumColumn(matrix, rows, 1);  // Suma elementelor din coloana a doua (index 1)
+    printf("Suma coloanei a doua este: %d\n", colSum);  // Breakpoint 4: Verificăm suma calculată
+
+    replaceIfGreaterThan(matrix, rows, cols, 4, 0);  // Înlocuim elementele mai mari decât 4 cu 0
+
+    printf("Matricea după înlocuire:\n");
+    printMatrix(matrix, rows, cols);  // Breakpoint 5: Verificăm matricea după modificări
+
+    return 0;
+}
