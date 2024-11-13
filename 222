@@ -1,0 +1,49 @@
+// Deschide pagina pe mobil
+open                | https://ac.upt.ro                                             		 	 | // Deschide site-ul pe mobil
+execute script      | return new Date().getTime();                                  	   	 	 |	startTimeMobile // Începe măsurarea timpului de încărcare pe mobil
+set window size     | 375x667                                                       		  	 |  // Dimensiune mobil
+pause				| 2000                                                               | // Pauză pentru încărcarea completă a paginii
+execute script      | return new Date().getTime() - ${startTimeMobile};            			 	 | loadTimeMobile // Măsoară timpul de încărcare pe mobil
+echo                | Timpul de încărcare pe mobil: ${loadTimeMobile} milisecunde  			  	 | // Afișează timpul de încărcare pe mobil
+
+// Deschide pagina pe desktop
+execute script      | return new Date().getTime();                                 			  	 | startTimeDesktop // Începe măsurarea timpului de încărcare pe desktop
+set window size     | 1920x1080                                                    			  	 |  // Dimensiune desktop
+pause				| 2000                                                               | // Pauză pentru încărcarea completă a paginii
+execute script      | return new Date().getTime() - ${startTimeDesktop};            		  	 | loadTimeDesktop // Măsoară timpul de încărcare pe desktop
+echo                | Timpul de încărcare pe desktop: ${loadTimeDesktop} milisecunde          	 | // Afișează timpul de încărcare pe desktop
+
+// Verifică diferența de timp de încărcare
+execute script      | return ${loadTimeDesktop} - ${loadTimeMobile};                 		  	 | timeDifference // Calculează diferența de timp între desktop și mobil
+echo                | Desktopul se încarcă mai greu decât mobilul cu: ${timeDifference} ms	  	 | // Afișează diferența de timp
+
+// Click pe linkul "Regulamente studențești" pe mobil
+execute script      | return new Date().getTime();                                  	   	 	 | startClickMobile // Începe măsurarea timpului de deschidere pe mobil
+set window size     | 375x667                                                       		  	 |  // Dimensiune mobil
+pause				| 2000                                                               | // Pauză pentru încărcarea completă a paginii
+click               | css=.tg-latestnews .tg-btn                                		 	 	 | // Click pe butonul din pagina mobil
+pause				| 2000                                                               | // Pauză după click
+click               | linkText=2     					                           		 	 	 | // Click pe al doilea link (exemplu)
+pause				| 2000                                                               | // Pauză după click
+click               | linkText=3  					                             		 	 	 | // Click pe al treilea link (exemplu)
+pause				| 2000                                                               | // Pauză după click
+execute script      | return new Date().getTime() - ${startClickMobile};             		  	 | clickTimeMobile // Măsoară timpul de deschidere pe mobil
+echo                | Timpul de deschidere pe mobil: ${clickTimeMobile} milisecunde  		  	 | // Afișează timpul de deschidere pe mobil
+
+// Click pe linkul "Regulamente studențești" pe desktop
+open				| https://ac.upt.ro                                             		 	 | // Deschide site-ul pe desktop
+execute script      | return new Date().getTime();                                 	 		 	 | startClickDesktop // Începe măsurarea timpului de deschidere pe desktop
+set window size     | 1920x1080                                                    	 		 	 |  // Dimensiune desktop
+pause				| 2000                                                               | // Pauză pentru încărcarea completă a paginii
+click               | css=.tg-latestnews .tg-btn                                		 	 	 | // Click pe butonul din pagina desktop
+pause				| 2000                                                               | // Pauză după click
+click               | linkText=2     					                           		 	 	 | // Click pe al doilea link (exemplu)
+pause				| 2000                                                               | // Pauză după click
+click               | linkText=3  					                             		 	 	 | // Click pe al treilea link (exemplu)
+pause				| 2000                                                               | // Pauză după click
+execute script      | return new Date().getTime() - ${startClickDesktop};           			 | clickTimeDesktop // Măsoară timpul de deschidere pe desktop
+echo                | Timpul de deschidere pe desktop: ${clickTimeDesktop} milisecunde		 	 | // Afișează timpul de deschidere pe desktop
+
+// Compară timpul de deschidere între desktop și mobil
+execute script      | return ${clickTimeDesktop} - ${clickTimeMobile};              		 	 | clickTimeDifference // Calculează diferența de timp între desktop și mobil la deschiderea linkului
+echo                | Desktopul se deschide mai greu decât mobilul cu: ${clickTimeDifference} ms | // Afișează diferența de timp la deschiderea linkului
