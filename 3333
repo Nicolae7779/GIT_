@@ -1,0 +1,32 @@
+open                  | https://www.pcgarage.ro/                                                      |   // Accesează site-ul
+
+// Lista de produse pentru căutare
+execute script        | return ["laptop", "Monitor", "Smartphone", "oculus quest 2", "volan Logitech", "televizor", "casti gaming", "procesor AMD", "placa video", "carcasa PC", "tastatura mecanica", "memorie RAM", "SSD", "incarcator laptop", "surubelnita electrica", "camera web", "tableta", "router wireless", "imprimanta", "switch de retea", "mouse gaming"]; | products
+execute script        | return Math.floor(Math.random() * ${products}.length);                       | randomProductIndex
+execute script        | return ${products}[${randomProductIndex}];                                   | selectedProduct
+
+// Lista opțiunilor de sortare
+execute script        | return ["Top vanzari", "Pret crescator", "Pret descrescator", "Stoc si disponibilitate", "Rating clienti", "Numar comentarii", "Numar vizualizari", "Popularitate in wishlist-uri", "Perioada garantie", "Data aparitiei"]; | Sort
+execute script        | return Math.floor(Math.random() * ${Sort}.length);                           | randomSortIndex          // Selectează aleatoriu un index pentru sortare
+execute script        | return ${Sort}[${randomSortIndex}];                                          | selectedSort             // Obține sortarea aleatorie
+
+// Căutare a produsului aleatoriu
+click                 | id=searchac                                                                   |
+type                  | id=searchac                                                                   | ${selectedProduct}
+send keys             | id=searchac                                                                   | ${KEY_ENTER}
+pause                 | 3000                                                                          |
+
+// Selectarea opțiunii de sortare aleatoare
+click                 | id=sortsel                                                                    |
+select                | id=sortsel                                                                    | label=${selectedSort}    // Aplică sortarea selectată aleatoriu
+pause                 | 3000                                                                          |
+
+// Adaugă un produs aleatoriu din rezultate în coș
+execute script        | return Math.floor(Math.random() * 2);                                         | randomAddToCart
+if                    | ${randomAddToCart} == 0                                                       |
+    assert element present | id=addl_2953131                                                          | 
+    click             | id=addl_2953131                                                               |
+elseIf                | ${randomAddToCart} == 1                                                       |
+    assert element present | id=addl_2994659                                                          |
+    click             | id=addl_2994659                                                               |
+endIf
