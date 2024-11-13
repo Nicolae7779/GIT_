@@ -1,0 +1,53 @@
+// Deschide pagina PC Garage pe mobil
+open                  | https://www.pcgarage.ro/                                       | // Accesează site-ul pe mobil
+
+// Definirea listei de produse și opțiuni de sortare
+execute script        | return {products: ["Laptop Gaming", "Monitor", "Smartphone", "Oculus Quest 2", "Volan Logitech", "Tabletă", "Camera Digitală", "Imprimantă", "Router", "SSD 1TB", "Memorie RAM 16GB", "Placă Video", "Boxe Bluetooth", "Casti Gaming", "Hard Disk 2TB", "Laptop Business", "Smartwatch", "Ecran 4K", "Mouse Wireless", "Tastatură Mecanică", "Boxe Active", "Scanner", "UPS", "Hub USB"]}; | data // Definirea listei de produse
+execute script        | return ["Top vânzări", "Preț crescător", "Preț descrescător", "Stoc și disponibilitate", "Rating clienți", "Număr comentarii", "Număr vizualizări", "Popularitate în wishlist-uri", "Perioadă garanție", "Data apariției"]; | sortOptions // Definirea opțiunilor de sortare
+
+// Inițializează indexul pentru buclă
+execute script        | return 0;                                                      | index
+
+// Calculează totalul produselor
+execute script        | return ${data.products}.length;                                | totalProducts
+
+// Setează numărul de produse pe care dorești să le adaugi în coș
+execute script        | return 1;                                                      | targetAdditions // Numărul de adăugări în coș (poți schimba 1 la alt număr pentru mai multe adăugări)
+
+while                 | ${index} < ${targetAdditions}                                  |   // Iterează prin numărul țintă de adăugări
+    // Selectează un produs și o sortare aleatorie
+    execute script    | return Math.floor(Math.random() * ${data.products}.length);    | randomIndex          // Selectează aleator un index pentru produs
+    execute script    | return ${data.products}[${randomIndex}];                       | selectedProduct      // Selectează produsul aleator
+
+    execute script    | return Math.floor(Math.random() * ${sortOptions}.length);      | randomSortIndex      // Selectează aleator un index pentru sortare
+    execute script    | return ${sortOptions}[${randomSortIndex}];                      | selectedSort         // Selectează opțiunea de sortare aleatorie
+
+    // Caută produsul selectat
+    click             | id=searchac                                                    | // Click pe bara de căutare
+    type              | id=searchac                                                    | ${selectedProduct} // Introduce numele produsului
+    send keys         | id=searchac                                                    | ${KEY_ENTER} // Trimite căutarea
+    pause             | 3000                                                           | // Așteaptă rezultatele căutării
+
+    // Selectează o opțiune de sortare aleatorie
+    click             | id=sortsel                                                     | // Click pe dropdown-ul de sortare
+    select            | id=sortsel                                                     | label=${selectedSort} // Selectează opțiunea de sortare aleatorie
+    pause             | 3000                                                           | // Așteaptă aplicarea sortării
+
+    // Adaugă un produs aleatoriu în coș
+    execute script    | return Math.floor(Math.random() * 2);                         | randomProductIndex   // Selectează aleator între primul și al doilea produs afișat
+    if                | ${randomProductIndex} == 0                                       |
+        assert element present | id=addl_2953131                                       | // Verifică prezența butonului de adăugare pentru primul produs
+        click         | id=addl_2953131                                                | // Click pe butonul de adăugare
+    elseIf            | ${randomProductIndex} == 1                                       |
+        assert element present | id=addl_2994659                                       | // Verifică prezența butonului de adăugare pentru al doilea produs
+        click         | id=addl_2994659                                                | // Click pe butonul de adăugare
+    endIf
+
+    // Măsoară timpul de încărcare după adăugare pe mobil
+    execute script    | return new Date().getTime();                                   | endTimeMobile
+    execute script    | return endTimeMobile - ${startTimeMobile};                     | loadTimeMobile
+    echo              | Timpul de încărcare pe mobil: ${loadTimeMobile} milisecunde    | // Afișează timpul de încărcare pe mobil
+
+    // Incrementarea indexului
+    execute script    | return ${index} + 1;                                          | index
+end                   |
